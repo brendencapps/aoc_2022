@@ -1,46 +1,49 @@
 import java.io.File
+import java.util.PriorityQueue
 
 fun main() {
 
+    val exampleData = CalorieReader("exampleData.txt")
+    val testData = CalorieReader("caloriesInput.txt")
+
     // Make sure we get the correct answer from the example.
-    check(getCaloriesForTopX("exampleData.txt", 1) == 24000)
-    check(getCaloriesForTopX("exampleData.txt", 2) == 35000)
-    check(getCaloriesForTopX("exampleData.txt", 3) == 45000)
-    check(getCaloriesForTopX("exampleData.txt", 4) == 51000)
-    check(getCaloriesForTopX("exampleData.txt", 5) == 55000)
-    check(getCaloriesForTopX("caloriesInput.txt", 1) == 66487)
+    check(exampleData.getCaloriesForTopX(1) == 24000)
+    check(exampleData.getCaloriesForTopX(2) == 35000)
+    check(exampleData.getCaloriesForTopX(3) == 45000)
+    check(exampleData.getCaloriesForTopX(4) == 51000)
+    check(exampleData.getCaloriesForTopX(5) == 55000)
+    check(testData.getCaloriesForTopX(1) == 66487)
+
+    for(i in 1 .. 5) {
+        check(exampleData.getCaloriesForTopX(i) == exampleData.getCaloriesForTopX2(i))
+    }
 
     // Print out the max.
-    println(getCaloriesForTopX("caloriesInput.txt", 3))
+    println(testData.getCaloriesForTopX(1))
+    println(testData.getCaloriesForTopX(3))
 }
 
-fun getCaloriesForTopX(input: String, numElves: Int): Int {
+class CalorieReader(input: String) {
 
-    val maxCalories = IntArray(numElves) { 0 }
-    //var maxCalories = 0
-    var currentCalories = 0
-    for(calorie in File(input).readLines()) {
-        if(calorie.isBlank()) {
-            addToSortedArray(maxCalories, currentCalories)
-            currentCalories = 0
+    private val calorieList = File(input)
+        .readText()
+        .split("\r\n\r\n")
+        .map { elf -> elf.lines().sumOf { calories -> calories.toInt() } }
+
+    fun getCaloriesForTopX(numElves: Int): Int {
+        val topCalories = PriorityQueue<Int>()
+        for(calories in calorieList) {
+            topCalories.add(calories)
+            if(topCalories.size > numElves) { topCalories.poll() }
         }
-        else {
-            currentCalories += calorie.toInt()
-        }
+        return topCalories.sum()
     }
-    addToSortedArray(maxCalories, currentCalories)
-    return maxCalories.sum()
-}
 
-fun addToSortedArray(array: IntArray, value: Int) {
-    for(i in array.indices) {
-        if(value > array[i]) {
-
-            for(j in array.size - 1 downTo i + 1) {
-                array[j] = array[j-1]
-            }
-            array[i] = value
-            break
-        }
+    fun getCaloriesForTopX2(numElves: Int): Int {
+        return calorieList
+            .sortedDescending()
+            .take(numElves)
+            .sum()
     }
 }
+
