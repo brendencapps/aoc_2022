@@ -1,5 +1,6 @@
 import java.io.File
 import kotlin.system.exitProcess
+import kotlin.system.measureTimeMillis
 
 sealed class Play(val value: Int) {
     object Rock : Play(1)
@@ -112,19 +113,25 @@ data class GamePlay (
 
 fun main() {
     sanityCheck()
-    puzzle1() // 10624
+    val timeInMillisP1 = measureTimeMillis {
+        puzzle1() // 10624
+    }
     println("------------------------------------------------")
-    puzzle2() // 14060
+    val timeInMillisP2 = measureTimeMillis {
+        puzzle2() // 14060
+    }
+
+    println("$timeInMillisP1 $timeInMillisP2")
 }
 
 fun playGame(play: (String, String) -> Int) {
-    var score = 0
-    for (game in File("day2Puzzle1Strategy.txt").readLines()) {
-        val gamePlay = game.split(" ")
-        check(gamePlay.size == 2)
-        score += play(gamePlay[0], gamePlay[1])
-    }
-    println(score)
+    println(
+        File("day2Puzzle1Strategy.txt").readLines().sumOf { game ->
+            val gamePlay = game.split(" ")
+            check(gamePlay.size == 2)
+            play(gamePlay[0], gamePlay[1])
+        }
+    )
 }
 
 fun puzzle1() {
