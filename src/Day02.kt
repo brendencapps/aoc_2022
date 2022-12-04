@@ -1,33 +1,28 @@
 import java.io.File
-import kotlin.system.exitProcess
 import kotlin.system.measureTimeMillis
 
-sealed class Play(val value: Int) {
-    object Rock : Play(1)
-    object Paper : Play(2)
-    object Scissors : Play(3)
+sealed class Gesture(val value: Int) {
+    object Rock : Gesture(1)
+    object Paper : Gesture(2)
+    object Scissors : Gesture(3)
 
-    fun getResult(opponent: Play): Result {
+    private fun win(opponent: Gesture): Boolean {
         return when(this) {
-            Rock ->
-                when (opponent) {
-                    Rock -> Result.Draw
-                    Paper -> Result.Lose
-                    Scissors -> Result.Win
-                }
-            Paper ->
-                when (opponent) {
-                    Rock -> Result.Win
-                    Paper -> Result.Draw
-                    Scissors -> Result.Lose
-                }
-            Scissors ->
-                when (opponent) {
-                    Rock -> Result.Lose
-                    Paper -> Result.Win
-                    Scissors -> Result.Draw
-                }
+            Rock -> opponent == Scissors
+            Paper -> opponent == Rock
+            Scissors -> opponent == Paper
         }
+    }
+
+    fun getResult(opponent: Gesture): Result {
+        return if(opponent == this) {
+            Result.Draw
+        } else if(win(opponent)) {
+            Result.Win
+        } else {
+            Result.Lose
+        }
+
     }
 }
 
@@ -36,20 +31,20 @@ sealed class Result(val value: Int) {
     object Draw : Result(3)
     object Lose : Result(0)
 
-    fun getPlayForResult(opponent: Play) : Play {
+    fun getPlayForResult(opponent: Gesture) : Gesture {
         return when(this) {
             Win ->
                 when(opponent) {
-                    Play.Rock -> Play.Paper
-                    Play.Scissors -> Play.Rock
-                    Play.Paper -> Play.Scissors
+                    Gesture.Rock -> Gesture.Paper
+                    Gesture.Scissors -> Gesture.Rock
+                    Gesture.Paper -> Gesture.Scissors
                 }
             Draw -> opponent
             Lose ->
                 when(opponent) {
-                    Play.Rock -> Play.Scissors
-                    Play.Scissors -> Play.Paper
-                    Play.Paper -> Play.Rock
+                    Gesture.Rock -> Gesture.Scissors
+                    Gesture.Scissors -> Gesture.Paper
+                    Gesture.Paper -> Gesture.Rock
                 }
 
         }
@@ -61,25 +56,25 @@ data class GamePlay (
     val me: String = "",
     val result: String = "") {
 
-    private val _opponent: Play
-    private val _me: Play
+    private val _opponent: Gesture
+    private val _me: Gesture
     private val _result: Result
 
     init {
         if(me.isBlank() && result.isBlank()) {
-            exitProcess(-1)
+            error("Invalid input.  Expecting my gesture or result to be set.")
         }
-        _opponent = getPlay(opponent)
+        _opponent = getGesture(opponent)
         if(me.isBlank()) {
             _result = getResult(result)
             _me = _result.getPlayForResult(_opponent)
         }
         else if(result.isBlank()) {
-            _me = getPlay(me)
+            _me = getGesture(me)
             _result = _me.getResult(_opponent)
         }
         else {
-            exitProcess(-1)
+            error("Expecting my gesture or result to be blank.")
         }
 
     }
@@ -89,19 +84,19 @@ data class GamePlay (
             "X" -> Result.Lose
             "Y" -> Result.Draw
             "Z" -> Result.Win
-            else -> exitProcess(-1)
+            else -> error("Result input expected to be X, Y, or Z")
         }
     }
 
-    private fun getPlay(play: String) : Play {
+    private fun getGesture(play: String) : Gesture {
         return when(play) {
-            "A" -> Play.Rock
-            "B" -> Play.Paper
-            "C" -> Play.Scissors
-            "X" -> Play.Rock
-            "Y" -> Play.Paper
-            "Z" -> Play.Scissors
-            else -> exitProcess(-1)
+            "A" -> Gesture.Rock
+            "B" -> Gesture.Paper
+            "C" -> Gesture.Scissors
+            "X" -> Gesture.Rock
+            "Y" -> Gesture.Paper
+            "Z" -> Gesture.Scissors
+            else -> error("Gesture expected to be A, B, C, X, Y, or Z")
         }
     }
 
@@ -116,7 +111,6 @@ fun main() {
     val timeInMillisP1 = measureTimeMillis {
         puzzle1() // 10624
     }
-    println("------------------------------------------------")
     val timeInMillisP2 = measureTimeMillis {
         puzzle2() // 14060
     }
@@ -148,15 +142,15 @@ fun puzzle2() {
 
 
 fun sanityCheck() {
-    check(Play.Rock.value + Result.Win.value == 7)
-    check(Play.Rock.value + Result.Lose.value == 1)
-    check(Play.Rock.value + Result.Draw.value == 4)
-    check(Play.Paper.value + Result.Win.value == 8)
-    check(Play.Paper.value + Result.Lose.value == 2)
-    check(Play.Paper.value + Result.Draw.value == 5)
-    check(Play.Scissors.value + Result.Win.value == 9)
-    check(Play.Scissors.value + Result.Lose.value == 3)
-    check(Play.Scissors.value + Result.Draw.value == 6)
+    check(Gesture.Rock.value + Result.Win.value == 7)
+    check(Gesture.Rock.value + Result.Lose.value == 1)
+    check(Gesture.Rock.value + Result.Draw.value == 4)
+    check(Gesture.Paper.value + Result.Win.value == 8)
+    check(Gesture.Paper.value + Result.Lose.value == 2)
+    check(Gesture.Paper.value + Result.Draw.value == 5)
+    check(Gesture.Scissors.value + Result.Win.value == 9)
+    check(Gesture.Scissors.value + Result.Lose.value == 3)
+    check(Gesture.Scissors.value + Result.Draw.value == 6)
 
 }
 
