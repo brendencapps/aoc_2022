@@ -7,19 +7,18 @@ fun main() {
     println(day4Puzzle2("day4_input.txt"))
 }
 
-fun computePuzzle(input: String, computeScore: (IntRange, IntRange) -> Boolean): Int {
+fun computePuzzle(input: String, count: (IntRange, IntRange) -> Boolean): Int {
     val inputParser = "(\\d+)-(\\d+),(\\d+)-(\\d+)".toRegex()
 
     return File(input).readLines().count { elfPair ->
-        val result = inputParser.find(elfPair)
-        val (start1, end1, start2, end2) = result!!.destructured
-        computeScore(start1.toInt() .. end1.toInt(), start2.toInt() .. end2.toInt())
+        val (start1, end1, start2, end2) = inputParser.find(elfPair)!!.destructured
+        count(start1.toInt() .. end1.toInt(), start2.toInt() .. end2.toInt())
     }
 }
 
 fun day4Puzzle1(input: String): Int {
     return computePuzzle(input) { elf1, elf2 ->
-        elf1.contains(elf2) || elf2.contains(elf1)
+        elf1.fullyContains(elf2) || elf2.fullyContains(elf1)
     }
 }
 
@@ -29,7 +28,7 @@ fun day4Puzzle2(input: String): Int {
     }
 }
 
-fun IntRange.contains(other: IntRange): Boolean {
+fun IntRange.fullyContains(other: IntRange): Boolean {
     return first >= other.first && last <= other.last
 }
 
