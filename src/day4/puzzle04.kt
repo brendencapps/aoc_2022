@@ -1,10 +1,11 @@
 import java.io.File
 
 fun main() {
-    check(day4Puzzle1("day4_example.txt") == 2)
-    println(day4Puzzle1("day4_input.txt"))
-    check(day4Puzzle2("day4_example.txt") == 4)
-    println(day4Puzzle2("day4_input.txt"))
+    val inputDir = "inputs/day4"
+    check(day4Puzzle1("$inputDir/example.txt") == 2)
+    println(day4Puzzle1("$inputDir.input.txt"))
+    check(day4Puzzle2("$inputDir/example.txt") == 4)
+    println(day4Puzzle2("$inputDir/input.txt"))
 }
 
 fun computePuzzle(input: String, count: (IntRange, IntRange) -> Boolean): Int {

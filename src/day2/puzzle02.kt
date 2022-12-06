@@ -11,6 +11,7 @@ sealed class Gesture(val value: Int) {
             Rock -> opponent == Scissors
             Paper -> opponent == Rock
             Scissors -> opponent == Paper
+            else -> error("Unknown gesture")
         }
     }
 
@@ -38,6 +39,7 @@ sealed class Result(val value: Int) {
                     Gesture.Rock -> Gesture.Paper
                     Gesture.Scissors -> Gesture.Rock
                     Gesture.Paper -> Gesture.Scissors
+                    else -> error("Unknown gesture")
                 }
             Draw -> opponent
             Lose ->
@@ -45,7 +47,9 @@ sealed class Result(val value: Int) {
                     Gesture.Rock -> Gesture.Scissors
                     Gesture.Scissors -> Gesture.Paper
                     Gesture.Paper -> Gesture.Rock
+                    else -> error("Unknown gesture")
                 }
+            else -> error("Unknown outcome")
 
         }
     }
@@ -120,7 +124,7 @@ fun main() {
 
 fun playGame(play: (String, String) -> Int) {
     println(
-        File("day2Puzzle1Strategy.txt").readLines().sumOf { game ->
+        File("inputs/day2/strategy.txt").readLines().sumOf { game ->
             val gamePlay = game.split(" ")
             check(gamePlay.size == 2)
             play(gamePlay[0], gamePlay[1])

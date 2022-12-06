@@ -1,10 +1,11 @@
 import java.io.File
 
 fun main() {
-    check(day3Puzzle1("day3_example.txt") == 157)
-    println(day3Puzzle1("day3_input.txt")) // 8039
-    check(day3Puzzle2("day3_example.txt") == 70)
-    println(day3Puzzle2("day3_input.txt")) // 2510
+    val inputDir = "inputs/day3"
+    check(day3Puzzle1("$inputDir/example.txt") == 157)
+    println(day3Puzzle1("$inputDir.input.txt")) // 8039
+    check(day3Puzzle2("$inputDir/example.txt") == 70)
+    println(day3Puzzle2("$inputDir/input.txt")) // 2510
 }
 
 fun day3Puzzle1(input: String): Int {
