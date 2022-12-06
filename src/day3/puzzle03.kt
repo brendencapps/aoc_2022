@@ -1,9 +1,9 @@
 import java.io.File
 
-fun main() {
+fun day3Puzzle() {
     val inputDir = "inputs/day3"
     check(day3Puzzle1("$inputDir/example.txt") == 157)
-    println(day3Puzzle1("$inputDir.input.txt")) // 8039
+    println(day3Puzzle1("$inputDir/input.txt")) // 8039
     check(day3Puzzle2("$inputDir/example.txt") == 70)
     println(day3Puzzle2("$inputDir/input.txt")) // 2510
 }

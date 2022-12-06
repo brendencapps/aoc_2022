@@ -110,7 +110,7 @@ data class GamePlay (
     }
 }
 
-fun main() {
+fun day2Puzzle() {
     sanityCheck()
     val timeInMillisP1 = measureTimeMillis {
         puzzle1() // 10624

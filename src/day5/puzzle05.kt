@@ -3,11 +3,11 @@ import java.lang.Integer.min
 import java.util.*
 import kotlin.math.max
 
-fun main() {
+fun day5Puzzle() {
 
     val inputDir = "inputs/day5"
     check(day5Puzzle1("$inputDir/example.txt", getExampleStart()) == "CMZ")
-    println(day5Puzzle1("$inputDir.input.txt", getInputStart())) // TWSGQHNHL
+    println(day5Puzzle1("$inputDir/input.txt", getInputStart())) // TWSGQHNHL
     check(day5Puzzle2("$inputDir/example.txt", getExampleStart()) == "MCD")
     println(day5Puzzle2("$inputDir/input.txt", getInputStart())) // JNRSCDWPP
 }

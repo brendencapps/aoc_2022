@@ -3,7 +3,7 @@ package day1
 import java.io.File
 import java.util.PriorityQueue
 
-fun main() {
+fun day1Puzzle() {
 
     val exampleData = CalorieReader("inputs/day1/exampleData.txt")
     val testData = CalorieReader("inputs/day1/caloriesInput.txt")
