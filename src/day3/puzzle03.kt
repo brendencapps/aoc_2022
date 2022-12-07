@@ -1,3 +1,7 @@
+package day3
+
+import Puzzle
+import PuzzleInput
 import java.io.File
 
 fun day3Puzzle() {

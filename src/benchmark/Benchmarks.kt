@@ -1,21 +1,10 @@
 package benchmark
 
-import Day2Puzzle1Solution
-import Day2Puzzle1Solution2
-import Day2Puzzle2Solution
-import Day2Puzzle2Solution2
-import Day2PuzzleInput
-import Day6PuzzleInput
-import Day6PuzzleSolutionMutableSet
-import Day6PuzzleSolutionArray
-import Day7Puzzle2Solution
-import Day7Puzzle2SolutionList
-import Day7PuzzleInput
-import Day7PuzzleInputList
-import Day7PuzzleSolution
-import Day7PuzzleSolutionList
-import day1.Day1PuzzleInput
-import day1.Day1PuzzleSolution1
+import day2.Day2Puzzle1Solution
+import day2.Day2Puzzle1Solution2
+import day2.Day2Puzzle2Solution
+import day2.Day2Puzzle2Solution2
+import day2.Day2PuzzleInput
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.State

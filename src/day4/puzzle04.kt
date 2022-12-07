@@ -1,3 +1,7 @@
+package day4
+
+import Puzzle
+import PuzzleInput
 import java.io.File
 
 fun day4Puzzle() {
@@ -9,8 +13,8 @@ fun day4Puzzle() {
 }
 
 data class ElfSectionPair(val input: String) {
-    val elf1Section: IntRange
-    val elf2Section: IntRange
+    private val elf1Section: IntRange
+    private val elf2Section: IntRange
 
     init {
         val inputParser = "(\\d+)-(\\d+),(\\d+)-(\\d+)".toRegex()

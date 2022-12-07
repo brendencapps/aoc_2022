@@ -1,3 +1,7 @@
+package day6
+
+import Puzzle
+import PuzzleInput
 import java.io.File
 
 class Day6PuzzleInput(private val input: String, val numMarkers: Int, expectedResult: Int? = null) : PuzzleInput<Int>(expectedResult) {

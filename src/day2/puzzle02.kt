@@ -1,3 +1,7 @@
+package day2
+
+import Puzzle
+import PuzzleInput
 import java.io.File
 
 sealed class Gesture(val value: Int) {
@@ -10,7 +14,6 @@ sealed class Gesture(val value: Int) {
             Rock -> opponent == Scissors
             Paper -> opponent == Rock
             Scissors -> opponent == Paper
-            else -> error("Unknown gesture")
         }
     }
 
@@ -38,7 +41,6 @@ sealed class Result(val value: Int) {
                     Gesture.Rock -> Gesture.Paper
                     Gesture.Scissors -> Gesture.Rock
                     Gesture.Paper -> Gesture.Scissors
-                    else -> error("Unknown gesture")
                 }
             Draw -> opponent
             Lose ->
@@ -46,9 +48,7 @@ sealed class Result(val value: Int) {
                     Gesture.Rock -> Gesture.Scissors
                     Gesture.Scissors -> Gesture.Paper
                     Gesture.Paper -> Gesture.Rock
-                    else -> error("Unknown gesture")
                 }
-            else -> error("Unknown outcome")
 
         }
     }
@@ -87,7 +87,7 @@ data class GamePlay (
             "X" -> Result.Lose
             "Y" -> Result.Draw
             "Z" -> Result.Win
-            else -> error("Result input expected to be X, Y, or Z")
+            else -> error("day2.Result input expected to be X, Y, or Z")
         }
     }
 
@@ -99,7 +99,7 @@ data class GamePlay (
             "X" -> Gesture.Rock
             "Y" -> Gesture.Paper
             "Z" -> Gesture.Scissors
-            else -> error("Gesture expected to be A, B, C, X, Y, or Z")
+            else -> error("day2.Gesture expected to be A, B, C, X, Y, or Z")
         }
     }
     fun getScore(): Int {

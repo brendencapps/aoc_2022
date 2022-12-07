@@ -1,3 +1,7 @@
+package day5
+
+import Puzzle
+import PuzzleInput
 import java.io.File
 import java.lang.Integer.min
 import java.util.*
@@ -14,6 +18,7 @@ class Day5PuzzleInput(val stacks: List<Vector<Char>>, private val moves: String,
         }
     }
 }
+
 class Day5PuzzleSolutionPuzzle1 : Puzzle<String, Day5PuzzleInput>() {
     override fun solution(input: Day5PuzzleInput): String {
         input.doMoves { stacks, move ->

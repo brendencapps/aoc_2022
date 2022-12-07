@@ -1,7 +1,10 @@
-import java.io.File
-import java.util.PriorityQueue
+package day7
 
-class FileSystemEntry(val name: String, val parent: FileSystemEntry? = null, var size: Long = 0) {
+import Puzzle
+import PuzzleInput
+import java.io.File
+
+class FileSystemEntry(val name: String, val parent: FileSystemEntry? = null, private var size: Long = 0) {
     val children = mutableListOf<FileSystemEntry>()
     val isDir = size == 0.toLong()
     fun getEntrySize(): Long {
@@ -125,7 +128,6 @@ class Day7Puzzle2Solution : Puzzle<Long, Day7PuzzleInput>() {
     }
 }
 
-
 class Day7Puzzle2SolutionList : Puzzle<Long, Day7PuzzleInputList>() {
     override fun solution(input: Day7PuzzleInputList): Long {
         val targetDirSize = 30000000 - (70000000 - input.root.getEntrySize())
@@ -140,7 +142,6 @@ class Day7Puzzle2SolutionList : Puzzle<Long, Day7PuzzleInputList>() {
 }
 
 fun day7Puzzle() {
-
     Day7PuzzleSolution(100000).solve(Day7PuzzleInput("inputs/day7/exampleCommands.txt", 95437))
     Day7PuzzleSolution(100000).solve(Day7PuzzleInput("inputs/day7/inputCommands.txt",1428881))
     Day7PuzzleSolutionList(100000).solve(Day7PuzzleInputList("inputs/day7/exampleCommands.txt", 95437))
@@ -149,7 +150,6 @@ fun day7Puzzle() {
     Day7Puzzle2Solution().solve(Day7PuzzleInput("inputs/day7/inputCommands.txt", 10475598))
     Day7Puzzle2SolutionList().solve(Day7PuzzleInputList("inputs/day7/exampleCommands.txt", 24933642))
     Day7Puzzle2SolutionList().solve(Day7PuzzleInputList("inputs/day7/inputCommands.txt", 10475598))
-
 }
 
 
