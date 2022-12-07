@@ -1,5 +1,4 @@
 import java.io.File
-import kotlin.system.measureTimeMillis
 
 sealed class Gesture(val value: Int) {
     object Rock : Gesture(1)
@@ -103,58 +102,88 @@ data class GamePlay (
             else -> error("Gesture expected to be A, B, C, X, Y, or Z")
         }
     }
-
-
     fun getScore(): Int {
         return _me.value + _result.value
     }
 }
 
-fun day2Puzzle() {
-    sanityCheck()
-    val timeInMillisP1 = measureTimeMillis {
-        puzzle1() // 10624
-    }
-    val timeInMillisP2 = measureTimeMillis {
-        puzzle2() // 14060
-    }
 
-    println("$timeInMillisP1 $timeInMillisP2")
+fun day2Puzzle() {
+    Day2Puzzle1Solution().solve(Day2PuzzleInput(10624))
+    Day2Puzzle2Solution().solve(Day2PuzzleInput(14060))
+    Day2Puzzle1Solution2().solve(Day2PuzzleInput(10624))
+    Day2Puzzle2Solution2().solve(Day2PuzzleInput(14060))
 }
 
-fun playGame(play: (String, String) -> Int) {
-    println(
-        File("inputs/day2/strategy.txt").readLines().sumOf { game ->
+class Day2PuzzleInput(expectedResult: Int? = null) : PuzzleInput<Int>(expectedResult) {
+    fun getResult(result: (String, String) -> Int): Int {
+        return File("inputs/day2/strategy.txt").readLines().sumOf { game ->
             val gamePlay = game.split(" ")
             check(gamePlay.size == 2)
-            play(gamePlay[0], gamePlay[1])
+            result(gamePlay[0], gamePlay[1])
         }
-    )
-}
-
-fun puzzle1() {
-    playGame { opponent: String, me: String ->
-        GamePlay(opponent = opponent, me = me).getScore()
+    }
+    fun getResult2(result: (String) -> Int): Int {
+        return File("inputs/day2/strategy.txt").readLines().sumOf { game ->
+            result(game)
+        }
     }
 }
 
-fun puzzle2() {
-    playGame { opponent: String, resultStrategy: String ->
-        GamePlay(opponent = opponent, result = resultStrategy).getScore()
+class Day2Puzzle1Solution : Puzzle<Int, Day2PuzzleInput>() {
+    override fun solution(input: Day2PuzzleInput): Int {
+        return input.getResult { opponent, me ->
+            GamePlay(opponent = opponent, me = me).getScore()
+        }
+    }
+}
+
+class Day2Puzzle2Solution : Puzzle<Int, Day2PuzzleInput>() {
+    override fun solution(input: Day2PuzzleInput): Int {
+        return input.getResult { opponent, resultStrategy ->
+            GamePlay(opponent = opponent, result = resultStrategy).getScore()
+        }
+    }
+}
+
+class Day2Puzzle1Solution2 : Puzzle<Int, Day2PuzzleInput>() {
+    override fun solution(input: Day2PuzzleInput): Int {
+        return input.getResult2 { game ->
+            when(game) {
+                "A X" -> 1 + 3
+                "A Y" -> 2 + 6
+                "A Z" -> 3 + 0
+                "B X" -> 1 + 0
+                "B Y" -> 2 + 3
+                "B Z" -> 3 + 6
+                "C X" -> 1 + 6
+                "C Y" -> 2 + 0
+                "C Z" -> 3 + 3
+                else -> 0
+            }
+        }
+    }
+}
+
+class Day2Puzzle2Solution2 : Puzzle<Int, Day2PuzzleInput>() {
+    override fun solution(input: Day2PuzzleInput): Int {
+        return input.getResult2 { game ->
+            when (game) {
+                "A X" -> 3 + 0
+                "A Y" -> 1 + 3
+                "A Z" -> 2 + 6
+                "B X" -> 1 + 0
+                "B Y" -> 2 + 3
+                "B Z" -> 3 + 6
+                "C X" -> 2 + 0
+                "C Y" -> 3 + 3
+                "C Z" -> 1 + 6
+                else -> 0
+            }
+        }
     }
 }
 
 
-fun sanityCheck() {
-    check(Gesture.Rock.value + Result.Win.value == 7)
-    check(Gesture.Rock.value + Result.Lose.value == 1)
-    check(Gesture.Rock.value + Result.Draw.value == 4)
-    check(Gesture.Paper.value + Result.Win.value == 8)
-    check(Gesture.Paper.value + Result.Lose.value == 2)
-    check(Gesture.Paper.value + Result.Draw.value == 5)
-    check(Gesture.Scissors.value + Result.Win.value == 9)
-    check(Gesture.Scissors.value + Result.Lose.value == 3)
-    check(Gesture.Scissors.value + Result.Draw.value == 6)
 
-}
 

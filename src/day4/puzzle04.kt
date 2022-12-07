@@ -2,30 +2,53 @@ import java.io.File
 
 fun day4Puzzle() {
     val inputDir = "inputs/day4"
-    check(day4Puzzle1("$inputDir/example.txt") == 2)
-    println(day4Puzzle1("$inputDir/input.txt"))
-    check(day4Puzzle2("$inputDir/example.txt") == 4)
-    println(day4Puzzle2("$inputDir/input.txt"))
+    Day4Puzzle1Solution().solve(Day4PuzzleInput("$inputDir/example.txt", 2))
+    Day4Puzzle1Solution().solve(Day4PuzzleInput("$inputDir/input.txt", 305))
+    Day4Puzzle2Solution().solve(Day4PuzzleInput("$inputDir/example.txt", 4))
+    Day4Puzzle2Solution().solve(Day4PuzzleInput("$inputDir/input.txt", 811))
 }
 
-fun computePuzzle(input: String, count: (IntRange, IntRange) -> Boolean): Int {
-    val inputParser = "(\\d+)-(\\d+),(\\d+)-(\\d+)".toRegex()
+data class ElfSectionPair(val input: String) {
+    val elf1Section: IntRange
+    val elf2Section: IntRange
 
-    return File(input).readLines().count { elfPair ->
-        val (start1, end1, start2, end2) = inputParser.find(elfPair)!!.destructured
-        count(start1.toInt() .. end1.toInt(), start2.toInt() .. end2.toInt())
+    init {
+        val inputParser = "(\\d+)-(\\d+),(\\d+)-(\\d+)".toRegex()
+        val (start1, end1, start2, end2) = inputParser.find(input)!!.destructured
+        elf1Section = start1.toInt() .. end1.toInt()
+        elf2Section = start2.toInt() .. end2.toInt()
+    }
+
+    fun duplicateWork() : Boolean {
+        return elf1Section.fullyContains(elf2Section) || elf2Section.fullyContains(elf1Section)
+    }
+
+    fun overlaps() : Boolean {
+        return elf1Section.overlaps(elf2Section)
     }
 }
 
-fun day4Puzzle1(input: String): Int {
-    return computePuzzle(input) { elf1, elf2 ->
-        elf1.fullyContains(elf2) || elf2.fullyContains(elf1)
+class Day4PuzzleInput(private val input: String, expectedResult: Int? = null) : PuzzleInput<Int>(expectedResult) {
+
+    fun count(op: (ElfSectionPair) -> Boolean): Int {
+        return File(input).readLines().count { elfPair ->
+            op(ElfSectionPair(elfPair))
+        }
+    }
+}
+class Day4Puzzle1Solution : Puzzle<Int, Day4PuzzleInput>() {
+    override fun solution(input: Day4PuzzleInput): Int {
+        return input.count {elfSelectionPair ->
+            elfSelectionPair.duplicateWork()
+        }
     }
 }
 
-fun day4Puzzle2(input: String): Int {
-    return computePuzzle(input) { elf1, elf2 ->
-        elf1.overlaps(elf2)
+class Day4Puzzle2Solution : Puzzle<Int, Day4PuzzleInput>() {
+    override fun solution(input: Day4PuzzleInput): Int {
+        return input.count {elfSelectionPair ->
+            elfSelectionPair.overlaps()
+        }
     }
 }
 

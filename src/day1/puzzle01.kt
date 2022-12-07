@@ -1,51 +1,55 @@
 package day1
 
+import Puzzle
+import PuzzleInput
 import java.io.File
 import java.util.PriorityQueue
 
 fun day1Puzzle() {
+    Day1PuzzleSolution1(1).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 24000))
+    Day1PuzzleSolution1(2).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 35000))
+    Day1PuzzleSolution1(3).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 45000))
+    Day1PuzzleSolution1(4).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 51000))
+    Day1PuzzleSolution1(5).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 55000))
+    Day1PuzzleSolution1(1).solve(Day1PuzzleInput("inputs/day1/caloriesInput.txt", 66487))
 
-    val exampleData = CalorieReader("inputs/day1/exampleData.txt")
-    val testData = CalorieReader("inputs/day1/caloriesInput.txt")
-
-    // Make sure we get the correct answer from the example.
-    check(exampleData.getCaloriesForTopX(1) == 24000)
-    check(exampleData.getCaloriesForTopX(2) == 35000)
-    check(exampleData.getCaloriesForTopX(3) == 45000)
-    check(exampleData.getCaloriesForTopX(4) == 51000)
-    check(exampleData.getCaloriesForTopX(5) == 55000)
-    check(testData.getCaloriesForTopX(1) == 66487)
-
-    for(i in 1 .. 5) {
-        check(exampleData.getCaloriesForTopX(i) == exampleData.getCaloriesForTopX2(i))
-    }
-
-    // Print out the max.
-    println(testData.getCaloriesForTopX(1))
-    println(testData.getCaloriesForTopX(3))
+    Day1PuzzleSolution2(1).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 24000))
+    Day1PuzzleSolution2(2).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 35000))
+    Day1PuzzleSolution2(3).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 45000))
+    Day1PuzzleSolution2(4).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 51000))
+    Day1PuzzleSolution2(5).solve(Day1PuzzleInput("inputs/day1/exampleData.txt", 55000))
+    Day1PuzzleSolution2(3).solve(Day1PuzzleInput("inputs/day1/caloriesInput.txt", 197301))
 }
 
-class CalorieReader(input: String) {
+class Day1PuzzleInput(private val input: String, expectedResult: Int? = null) : PuzzleInput<Int>(expectedResult) {
 
-    private val calorieList = File(input)
-        .readText()
-        .split("\r\n\r\n")
-        .map { elf -> elf.lines().sumOf { calories -> calories.toInt() } }
-
-    fun getCaloriesForTopX(numElves: Int): Int {
-        val topCalories = PriorityQueue<Int>()
-        for(calories in calorieList) {
-            topCalories.add(calories)
-            if(topCalories.size > numElves) { topCalories.poll() }
-        }
-        return topCalories.sum()
+    fun sumTop(op: (List<Int>) -> Int): Int {
+        val calorieList = File(input)
+            .readText()
+            .split("\r\n\r\n")
+            .map { elf -> elf.lines().sumOf { calories -> calories.toInt() } }
+        return op(calorieList)
     }
+}
 
-    fun getCaloriesForTopX2(numElves: Int): Int {
-        return calorieList
-            .sortedDescending()
-            .take(numElves)
-            .sum()
+class Day1PuzzleSolution1(private val numElves: Int) : Puzzle<Int, Day1PuzzleInput>() {
+    override fun solution(input: Day1PuzzleInput): Int {
+        return input.sumTop { calorieList ->
+            val topCalories = PriorityQueue<Int>()
+            for(calories in calorieList) {
+                topCalories.add(calories)
+                if(topCalories.size > numElves) { topCalories.poll() }
+            }
+            topCalories.sum()
+        }
+    }
+}
+
+class Day1PuzzleSolution2(private val numElves: Int) : Puzzle<Int, Day1PuzzleInput>() {
+    override fun solution(input: Day1PuzzleInput): Int {
+        return input.sumTop { calorieList ->
+            calorieList.sortedDescending().take(numElves).sum()
+        }
     }
 }
 

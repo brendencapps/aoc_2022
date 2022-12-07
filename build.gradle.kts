@@ -20,6 +20,11 @@ tasks {
             java.srcDirs("src")
             resources.setSrcDirs(listOf("resources"))
         }
+        test {
+            java.srcDirs("test")
+            resources.setSrcDirs(listOf("resources"))
+
+        }
     }
 
     wrapper {
@@ -36,6 +41,7 @@ dependencies {
     implementation("org.openjdk.jmh:jmh-core:1.36")
     implementation("org.openjdk.jmh:jmh-generator-annprocess:1.36")
     implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.6")
+    testImplementation("junit:junit:4.13.2")
 }
 
 
