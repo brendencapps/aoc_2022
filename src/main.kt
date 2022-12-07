@@ -6,5 +6,6 @@ fun main() {
     //day3Puzzle()
     //day4Puzzle()
     //day5Puzzle()
-    day6Puzzle()
+    //day6Puzzle()
+    day7Puzzle()
 }
