@@ -1,14 +1,7 @@
-package day1
-
-import day2Puzzle
-import day3Puzzle
-import day4Puzzle
-import day5Puzzle
-import day6Puzzle
-import day7Puzzle
+import day1.day1Puzzle
 import org.junit.Test
 
-internal class Puzzle01Test {
+internal class PuzzleTest {
 
     @Test
     fun puzzle1Test() {
