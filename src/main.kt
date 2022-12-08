@@ -5,6 +5,7 @@ import day4.day4Puzzle
 import day5.day5Puzzle
 import day6.day6Puzzle
 import day7.day7Puzzle
+import day8.day8Puzzle
 
 fun main() {
     day1Puzzle()
@@ -14,4 +15,5 @@ fun main() {
     day5Puzzle()
     day6Puzzle()
     day7Puzzle()
+    day8Puzzle()
 }

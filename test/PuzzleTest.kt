@@ -5,6 +5,7 @@ import day4.day4Puzzle
 import day5.day5Puzzle
 import day6.day6Puzzle
 import day7.day7Puzzle
+import day8.day8Puzzle
 import org.junit.Test
 
 internal class PuzzleTest {
@@ -42,5 +43,10 @@ internal class PuzzleTest {
     @Test
     fun puzzle7Test() {
         day7Puzzle()
+    }
+
+    @Test
+    fun puzzle8Test() {
+        day8Puzzle()
     }
 }
