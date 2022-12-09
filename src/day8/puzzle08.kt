@@ -5,29 +5,70 @@ import PuzzleInput
 import java.io.File
 import java.lang.Integer.max
 
-data class TreeProperties(val height: Int, private val initialScore: Int) {
+data class TreeProperties(val height: Int, val row: Int, val col: Int, private val initialScore: Int) {
     var top = initialScore
     var bottom = initialScore
     var left = initialScore
     var right = initialScore
 
-    fun getTop(treeAbove: TreeProperties) {
-        top = max(treeAbove.top, treeAbove.height)
-    }
-
-    fun getLeft(treeLeft: TreeProperties) {
-        left = max(treeLeft.left, treeLeft.height)
-    }
-    fun getRight(treeRight: TreeProperties) {
-        right = max(treeRight.right, treeRight.height)
-    }
-    fun getBottom(treeBottom: TreeProperties) {
-        bottom = max(treeBottom.bottom, treeBottom.height)
-    }
-
     fun visible(): Boolean {
         return height > left || height > right || height > bottom || height > top
     }
+
+    fun visibleScore(): Int {
+        return top * left * right * bottom
+    }
+}
+
+class TreeIterator(val input: Day8PuzzleInput) {
+
+    fun iterate(op: (TreeProperties) -> Boolean): Int {
+       return iterate(0 until input.rows, 0 until input.cols, op)
+    }
+
+    fun iterate(rows: IntProgression, cols: IntProgression, op: (TreeProperties) -> Boolean): Int {
+        var index = 0
+        for(row in rows) {
+            for(col in cols) {
+                index++
+                if(!op(input.trees[row][col])) {
+                    return index
+                }
+            }
+        }
+        return index
+    }
+
+    fun <T> map(op: (TreeProperties) -> T) : List<T> {
+        return map(0 until input.rows, 0 until input.cols, op)
+    }
+
+    fun <T> map(rows: IntProgression, cols: IntProgression, op: (TreeProperties) -> T) : List<T> {
+        val list = mutableListOf<T>()
+        for(row in rows) {
+            for(col in cols) {
+                list.add(op(input.trees[row][col]))
+            }
+        }
+        return list
+    }
+
+    fun <T> left(tree: TreeProperties, op: (TreeProperties) -> T): T {
+        return op(input.trees[tree.row][tree.col - 1])
+    }
+
+    fun <T> up(tree: TreeProperties, op: (TreeProperties) -> T): T {
+        return op(input.trees[tree.row - 1][tree.col])
+    }
+
+    fun <T> right(tree: TreeProperties, op: (TreeProperties) -> T): T {
+        return op(input.trees[tree.row][tree.col + 1])
+    }
+
+    fun <T> down(tree: TreeProperties, op: (TreeProperties) -> T): T {
+        return op(input.trees[tree.row + 1][tree.col])
+    }
+
 }
 
 fun day8Puzzle() {
@@ -39,72 +80,62 @@ fun day8Puzzle() {
 }
 
 class Day8PuzzleInput(val input: String, initialScore: Int, expectedResult: Int? = null) : PuzzleInput<Int>(expectedResult) {
-    val trees = File(input).readLines().map { row ->
-        row.toCharArray().map {tree ->
-            TreeProperties(tree.digitToInt(), initialScore)
+    val trees: List<List<TreeProperties>>
+    val rows: Int
+    val cols: Int
+    val iterator: TreeIterator
+    init {
+        trees = File(input).readLines().mapIndexed { rowIndex, row ->
+            row.toCharArray().mapIndexed {colIndex, tree ->
+                TreeProperties(tree.digitToInt(), rowIndex, colIndex, initialScore)
+            }
         }
+        rows = trees.size
+        cols = trees[0].size
+        iterator = TreeIterator(this)
     }
+
 }
 
 class Day8PuzzleSolution : Puzzle<Int, Day8PuzzleInput>() {
     override fun solution(input: Day8PuzzleInput): Int {
-        for(row in 1 until input.trees.size - 1) {
-            val rowReverse = input.trees.size - row - 1
-            for(col in 1 until input.trees[row].size - 1) {
-                val colReverse = input.trees[row].size - col - 1
-                //println("$row $col $rowReverse $colReverse ${input.trees.size} ${input.trees[row].size} ${input.trees[rowReverse].size}")
-                input.trees[row][col].getTop(input.trees[row-1][col])
-                input.trees[row][col].getLeft(input.trees[row][col-1])
-                input.trees[rowReverse][colReverse].getBottom(input.trees[rowReverse+1][colReverse])
-                input.trees[rowReverse][colReverse].getRight(input.trees[rowReverse][colReverse+1])
-            }
+        input.iterator.iterate(1 until input.rows, 1 until input.cols) { tree ->
+            tree.top = input.iterator.up(tree) { max(it.top, it.height) }
+            tree.left = input.iterator.left(tree) { max(it.left, it.height) }
+            true
         }
-        return input.trees.sumOf { row ->
-            row.count { tree ->
-                tree.visible()
-            }
+        input.iterator.iterate(input.rows - 2  downTo 0, input.cols - 2  downTo 0) { tree ->
+            tree.bottom = input.iterator.down(tree) { max(it.bottom, it.height) }
+            tree.right = input.iterator.right(tree) { max(it.right, it.height) }
+            true
         }
+        return input.iterator.map(input.trees.indices, input.trees[0].indices) { it.visible() }.count { it }
     }
-
 }
 
 class Day8Puzzle2Solution : Puzzle<Int, Day8PuzzleInput>() {
     override fun solution(input: Day8PuzzleInput): Int {
-        for(row in 1 until input.trees.size - 1) {
-            for(col in 1 until input.trees[row].size - 1) {
-                input.trees[row][col].top = visibleTreesInCol(col, row-1 downTo 0, input.trees[row][col], input)
-                input.trees[row][col].left = visibleTreesInRow(row, col-1 downTo 0, input.trees[row][col], input)
-                input.trees[row][col].bottom = visibleTreesInCol(col, row + 1 until input.trees.size, input.trees[row][col], input)
-                input.trees[row][col].right = visibleTreesInRow(row, col + 1 until input.trees[row].size, input.trees[row][col], input)
+        input.iterator.iterate { tree ->
+            tree.top = input.iterator.iterate(tree.row - 1 downTo 0, tree.col .. tree.col) { otherTree ->
+                tree.height > otherTree.height
             }
-        }
-        return input.trees.maxOf { row ->
-            row.maxOf { tree ->
-                tree.top * tree.left * tree.right * tree.bottom
+            tree.left = input.iterator.iterate(tree.row .. tree.row, tree.col - 1 downTo 0) { otherTree ->
+                tree.height > otherTree.height
             }
+            true
         }
 
-    }
-
-    private fun visibleTreesInRow(row: Int, range: IntProgression, tree: TreeProperties, input: Day8PuzzleInput): Int {
-        var trees = 0
-        for(col in range) {
-            trees++
-            if(input.trees[row][col].height >= tree.height) {
-                break
+        input.iterator.iterate(input.rows - 1 downTo 0, input.cols - 1 downTo 0) { tree ->
+            tree.bottom = input.iterator.iterate(tree.row + 1 until input.rows, tree.col .. tree.col) { otherTree ->
+                tree.height > otherTree.height
             }
-        }
-        return trees
-    }
-
-    private fun visibleTreesInCol(col: Int, range: IntProgression, tree: TreeProperties, input: Day8PuzzleInput): Int {
-        var trees = 0
-        for(row in range) {
-            trees++
-            if(input.trees[row][col].height >= tree.height) {
-                break
+            tree.right = input.iterator.iterate(tree.row .. tree.row, tree.col + 1 until input.cols) { otherTree ->
+                tree.height > otherTree.height
             }
+            true
         }
-        return trees
+
+        return input.iterator.map { tree -> tree }.maxOf { it.visibleScore()  }
+
     }
 }
