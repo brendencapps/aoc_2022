@@ -1,4 +1,5 @@
 import day1.day1Puzzle
+import day10.day10Puzzle
 import day2.day2Puzzle
 import day3.day3Puzzle
 import day4.day4Puzzle
@@ -54,5 +55,10 @@ internal class PuzzleTest {
     @Test
     fun puzzle9Test() {
         day9Puzzle()
+    }
+
+    @Test
+    fun puzzle10Test() {
+        day10Puzzle()
     }
 }
