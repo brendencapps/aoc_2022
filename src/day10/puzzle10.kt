@@ -52,6 +52,7 @@ class Day10Puzzle2Solution : Puzzle<Int, Day10PuzzleInput>() {
                 x += operation.split(" ")[1].toInt()
             }
         }
+        println()
         return 0
     }
     private fun runCycle() {
