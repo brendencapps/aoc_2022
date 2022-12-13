@@ -1,5 +1,8 @@
 import day1.day1Puzzle
 import day10.day10Puzzle
+import day11.day11Puzzle
+import day12.day12Puzzle
+import day13.day13Puzzle
 import day2.day2Puzzle
 import day3.day3Puzzle
 import day4.day4Puzzle
@@ -8,6 +11,7 @@ import day6.day6Puzzle
 import day7.day7Puzzle
 import day8.day8Puzzle
 import day9.day9Puzzle
+import org.junit.Assert
 import org.junit.Test
 
 internal class PuzzleTest {
@@ -61,4 +65,20 @@ internal class PuzzleTest {
     fun puzzle10Test() {
         day10Puzzle()
     }
+
+    @Test
+    fun puzzle11Test() {
+        day11Puzzle()
+    }
+
+    @Test
+    fun puzzle12Test() {
+        day12Puzzle()
+    }
+
+    @Test
+    fun puzzle13Test() {
+        day13Puzzle()
+    }
+
 }
