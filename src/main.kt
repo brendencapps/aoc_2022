@@ -3,6 +3,7 @@ import day10.day10Puzzle
 import day11.day11Puzzle
 import day12.day12Puzzle
 import day13.day13Puzzle
+import day14.day14Puzzle
 import day2.day2Puzzle
 import day3.day3Puzzle
 import day4.day4Puzzle
@@ -26,5 +27,6 @@ fun main() {
     day11Puzzle()
     //day12Puzzle()
     day13Puzzle()
+    day14Puzzle()
 
 }
