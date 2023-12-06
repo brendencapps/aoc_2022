@@ -41,9 +41,9 @@ dependencies {
     implementation("org.openjdk.jmh:jmh-core:1.36")
     implementation("org.openjdk.jmh:jmh-generator-annprocess:1.36")
     implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.6")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     testImplementation("junit:junit:4.13.2")
-    implementation("org.json:json:20220924")
+    implementation("org.json:json:20230227")
 }
 
 
